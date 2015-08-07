@@ -32,7 +32,3 @@ Artificial.Data <- generate.Artificial.Data(numSpecies=40,numTraits=3,numCommuni
                    occurence_distribution=0.2,average_richness=0.5,SD_richness=0.2,
                    random.Mechanism=FALSE);
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

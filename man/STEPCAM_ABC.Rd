@@ -21,7 +21,8 @@ STEPCAM_ABC(data_abundances,data_species,numParticles,n_traits,plot_number,stopR
   \code{data_species} is a matrix containing the species' specific traits. \cr
   \code{rows}{ every row corresponds to a different species} \cr
   \code{columns}{ the first column contains the name of the species, every consecutive column corresponds to a different trait} \cr
-  For an example of a suitable \code{data_species} matrix, run the \code{generate.Artificial.Data} function
+  It is important to realize that ideally, the number of traits is lower than the number of species in the most species poor plot of the 'data_abundances' matrix, as FRic calculation requires at least as many species as their are traits, and will autmatically omit some traits if this assumption is not met. \cr
+  For an example of a suitable data_species matrix, run the generate.Artificial.Data function
 }
   \item{numParticles}{The number of particles to be used in the ABC-SMC analysis.
 }
@@ -34,16 +35,15 @@ STEPCAM_ABC(data_abundances,data_species,numParticles,n_traits,plot_number,stopR
 }
 
 \value{
-    \item{stochasticity}{Posterior distribution of the relative contribution of stochasticity (random removal steps) to community assembly}
-    \item{filtering}{Posterior distribution of the relative contribution of filtering to community assembly}
-    \item{competition}{Posterior distribution of the relative contribution of competition (or limiting similarity processes) to community assembly}
+    \item{DA}{Posterior distribution of the relative contribution of dispersal assembly (random removal steps) to community assembly}
+    \item{HF}{Posterior distribution of the relative contribution of habitat filtering to community assembly}
+    \item{LS}{Posterior distribution of the relative contribution of limiting similarity to community assembly}
 }
-\references{ F. van der Plas, T. Janzen, A. Ordonez, W. Fokkema, J. Reinders, R.S. Etienne & H. Olff, 2014,
-A new modeling approach quantifies the relative importance of different community assembly processes,
-in prep.
+\references{ Fons van der Plas, Thijs Janzen, Alejandro Ordonez, Wimke Fokkema, Josephine Reinders, Rampal S. Etienne, and Han Olff 2015. A new modeling approach estimates the relative importance of different community assembly processes. Ecology 96:1502-1515.
 }
 \author{
-Thijs Janzen & Fons van der Plas
+Thijs Janzen & Fons van der Plas + Torsten Hauffe
+
 }
 
 

@@ -102,8 +102,8 @@ newpage = TRUE, pop = TRUE, ...)
 # this plots the parameter values of best fitting models: it gives an
 # indication of a most likely community assembly processes in your community
 TernPlot <- function(output){
-	d <- cbind(output$Stoch, output$Filt, output$Comp);
+	d <- cbind(output$DA, output$HF, output$LS);
 	ternaryplot2(d, scale=1, col="black", grid=T, cex = 0.5, labels = c("outside"),
-  dimnames = c("RR", "F", "LS"), main="", coordinates = TRUE)
+  dimnames = c("DA", "HF", "LS"), main="", coordinates = TRUE)
 }
 

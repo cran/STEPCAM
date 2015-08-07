@@ -2,18 +2,26 @@
 \alias{STEPCAM-package}
 \docType{package}
 \title{
-ABC-SMC inference of the STEPCAM model 
+ABC-SMC Inference of STEPCAM
 }
 \description{
-ABC-SMC inference of the relative contribution of stochasticy (random removal), filtering and competition (limiting similarity) through the use of stepwise commmunity assembly.
+ABC-SMC inference of the relative contribution of dispersal assembly, filtering and limiting similarity through the use of stepwise commmunity assembly.
+\cr\cr
+Updates \cr\cr
+Version 1.1\cr
+\enumerate{
+  \item calculation of the diversity indices is plit up into two parts: calculating the ordination axes, and the actual calculation of the indices - this allows for a speed up of the code by moving the calculation of the ordination axes outside the SMC algorithm. Many thanks to Torsten Hauffe for this improvement! \cr
+  \item Corrected scaling of the dbFD function - it now always treats abundances as presence/absence data, much thanks to Torsten Hauffe for pointing this out! \cr
+  \item updated references \cr
+}
 
 }
 \details{
 \tabular{ll}{
 Package: \tab STEPCAM\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2013-10-08\cr
+Version: \tab 1.1\cr
+Date: \tab 2015-08-07\cr
 License: \tab GPL 2.0\cr
 }
  The function STEPCAM_ABC performs an ABC-SMC analysis of the STEPCAM model on user provided data,
@@ -25,8 +33,11 @@ Thijs Janzen & Fons van der Plas
 Maintainer: Thijs Janzen <thijsjanzen@gmail.com>
 }
 \references{
-F. van der Plas, T. Janzen, A. Ordonez, W. Fokkema, J. Reinders, R.S. Etienne & H. Olff, 2014, A new modeling approach quantifies the relative importance of different community assembly processes, in prep.
-
+Fons van der Plas, Thijs Janzen, Alejandro Ordonez, Wimke Fokkema, Josephine Reinders, Rampal S. Etienne, and Han Olff 2015. A new modeling approach estimates the relative importance of different community assembly processes. Ecology 96:1502-1515.
 }
-\keyword{ package, STEPCAM, community assembly, functional diversity, stochasticity, limiting similarity }
+\keyword{STEPCAM}
+\keyword{community assembly}
+\keyword{functional diversity}
+\keyword{stochasticity}
+\keyword{limiting similarity}
 

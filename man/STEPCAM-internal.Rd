@@ -23,6 +23,8 @@
 \alias{scaleSpeciesvalues}
 \alias{STEPCAM}
 \alias{ternaryplot2}
+\alias{ordinationAxes}
+\alias{strippedDbFd}
 \title{Internal STEPCAM functions}
 \description{Internal STEPCAM functions}
 \details{These are not to be called by the user}

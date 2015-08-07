@@ -33,7 +33,9 @@ STEPCAM_ABC <- function(data_abundances, data_species, numParticles, n_traits, p
   observed_traits <- observed_traits[, -1]
   
   # calculate FD values observed communities
-  FD_output <- dbFD(observed_traits, observed_presences, stand.x = F,messages = FALSE)
+  Ord <- ordinationAxes(x = scaled_species[,-1], stand.x = FALSE)
+  FD_output <- strippedDbFd(Ord, ifelse(data_abundances > 0, 1, 0)) 
+  
   trait_means <- c()
   traitvalues <- c()
   for(i in 1:n_traits){
@@ -44,7 +46,8 @@ STEPCAM_ABC <- function(data_abundances, data_species, numParticles, n_traits, p
     trait_means[i] <- mean(traitvalues) 
   }
   # bind FD values and CTM together
-  summary_stats <- cbind(FD_output$FRic, FD_output$FEve, FD_output$FDiv, t(trait_means)) 
+  summary_stats <- cbind(FD_output$FRic[plot_number],FD_output$FEve[plot_number],FD_output$FDiv[plot_number], t(trait_means)) # bind FD values and CTM together
+
 
   # calculate the SD of FD/CTM values: this is used to asses STEPCAM model fit
   sd_vals <- calcSD(scaled_species, data_abundances, n_plots, n_traits); 
@@ -54,24 +57,26 @@ STEPCAM_ABC <- function(data_abundances, data_species, numParticles, n_traits, p
   names(scaled_species) <- c("sp", traitnames[1:n_traits], "freq")
   row.names(scaled_species) <- c(1:taxa)
 
+  
+
   output <- ABC_SMC(numParticles, species_fallout, taxa,esppres, n_traits,
   sd_vals, summary_stats, plot_number, scaled_species, data_abundances,
-  data_frequencies, stopRate);
+  data_frequencies, stopRate, Ord);
  
   return(output);  
 }
 
 
 plotSTEPCAM <- function(output){
-  total <- output$Stoch[1] + output$Filt[1] + output$Comp[1];
+  total <- output$DA[1] + output$HF[1] + output$LS[1];
   par(mfrow=c(1, 3));
-  hist(output$Stoch / total, col="grey", main = "Stochasticity", xlim = c(0, 1), ylab = "", xlab = "");
-  hist(output$Filt / total, col="grey" , main = "Filtering", xlim = c(0, 1), ylab = "", xlab = "");
-  hist(output$Comp / total, col="grey" , main = "Limiting Similarity", xlim = c(0, 1), ylab = "", xlab = "");
+  hist(output$DA / total, col="grey", main = "Dispersal Assembly", xlim = c(0, 1), ylab = "", xlab = "");
+  hist(output$HF / total, col="grey" , main = "Habitat Filtering", xlim = c(0, 1), ylab = "", xlab = "");
+  hist(output$LS / total, col="grey" , main = "Limiting Similarity", xlim = c(0, 1), ylab = "", xlab = "");
 }
 
 plotElement <- function(d, xmin, xmax, index, maxTime, parameter){
-  topLabels <- c("Dispersal", "Filtering", "Competition", "Richness", "Evenness",
+  topLabels <- c("Dispersal Assembly", "Habitat Filtering", "Limiting Similarity", "Richness", "Evenness",
   "Diversity", "Optimum", "Fit");
   mean_data <- mean(d) 
   stdev_data <- sd(d)

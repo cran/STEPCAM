@@ -84,7 +84,7 @@ calculateDistance <- function(rich, even, div, opt_diff, obs, sd_vals)
 
 
 ABC_SMC <- function(numParticles, species_fallout, taxa, esppres, n_traits,
-sd_vals, summary_stats, community_number, species, abundances, frequencies, stopRate)
+sd_vals, summary_stats, community_number, species, abundances, frequencies, stopRate, Ord)
 {
   optimum <- summary_stats[, 4:(3 + n_traits)];
 
@@ -127,7 +127,7 @@ sd_vals, summary_stats, community_number, species, abundances, frequencies, stop
 	if(d[numParticles,1] == numParticles)
     {
        d <- read.table(f[length(f)-1],header=F);
-	   output <- list( Stoch = d[,1],Filt = d[,2], Comp = d[,3]);   
+	   output <- list( DA = d[,1],HF = d[,2], LS = d[,3]);   
 	   cat("Found previously finished run, loaded results from that run\n"); flush.console();
 	   return(output);
     }
@@ -189,10 +189,11 @@ sd_vals, summary_stats, community_number, species, abundances, frequencies, stop
       present_species <- as.vector(which(colSums(communities)>0))
 
       # calculate several measures of FD of modeled community
-      FD_output <- dbFD(traits[present_species, ], communities[, present_species], stand.x = F,messages=FALSE)
-      FRic <- FD_output$FRic # FRic = functional richness (Villeger et al, 2008, Ecology)
-      FEve <- FD_output$FEve # FEve = functional evenness (Villeger et al, 2008, Ecology)
-      FDiv <- FD_output$FDiv # FDiv = functional diversity (Villeger et al, 2008, Ecology)
+     # FD_output <- dbFD(traits[present_species, ], communities[, present_species], stand.x = F,messages=FALSE)
+      FD_output <- strippedDbFd(Ord, communities[,present_species]);       
+      FRic <- FD_output$FRic[community_number] # FRic = functional richness (Villeger et al, 2008, Ecology)
+      FEve <- FD_output$FEve[community_number] # FEve = functional evenness (Villeger et al, 2008, Ecology)
+      FDiv <- FD_output$FDiv[community_number] # FDiv = functional diversity (Villeger et al, 2008, Ecology)
         
       trait_means <- c()
       for(i in 1:n_traits){
@@ -272,7 +273,7 @@ sd_vals, summary_stats, community_number, species, abundances, frequencies, stop
 		d <- read.table(paste("particles_t=", t, ".txt", sep="", collapse = NULL), header = F);
 	}
   }
-  output <- list( Stoch = d[, 1], Filt = d[, 2], Comp = d[, 3]);
+  output <- list( DA = d[, 1], HF = d[, 2], LS = d[, 3]);
   return(output);
 }
 

@@ -4,22 +4,20 @@
   Create a ternary plot from results of the STEPCAM_ABC function
 }
 \description{
-  This function plots the obtained combinations of Stochasticity (random removal), Filtering and Competition (limiting similarity) of best fitting models in a Ternary plot, similar to Figure 1 in van der Plas et al. 2013
+  This function plots the obtained combinations of dispersal assembly, habitat filtering and limiting similarity of best fitting models in a Ternary plot, similar to Figure 3 in van der Plas et al. 2015
 }
 \usage{
 TernPlot(output)
 }
 \arguments{
   \item{output}{A list with the following elements: \cr
-           - \code{Stoch}  a vector containing the posterior distribution for the parameter stochasticity (random removal) \cr
-           - \code{Filt}  a vector containing the posterior distribution for the parameter filtering \cr
-           - \code{Comp}  a vector containing the posterior distribution for the parameter competition (limiting similarity) \cr
+           - \code{DA}  a vector containing the posterior distribution for the parameter dispersal assembly \cr
+           - \code{HF}  a vector containing the posterior distribution for the parameter habitat filtering \cr
+           - \code{LS}  a vector containing the posterior distribution for the parameter limiting similarity \cr
             This list is generated as output by the function STEPCAM_ABC}
 }
 
-\references{F. van der Plas, T. Janzen, A. Ordonez, W. Fokkema, J. Reinders, R.S. Etienne & H. Olff, 2013,
-A new modeling approach quantifies the relative importance of different community assembly processes,
-in prep.}
+\references{Fons van der Plas, Thijs Janzen, Alejandro Ordonez, Wimke Fokkema, Josephine Reinders, Rampal S. Etienne, and Han Olff 2015. A new modeling approach estimates the relative importance of different community assembly processes. Ecology 96:1502-1515.}
 \author{Fons van der Plas. Adapted from the ternaryplot function from the 'vcd' package}
 \examples{
 Artificial.Data <- generate.Artificial.Data(numSpecies=40,numTraits=3,numCommunities=5,
@@ -29,7 +27,3 @@ O <- STEPCAM_ABC(Artificial.Data$abundances,Artificial.Data$traits,
                  numParticles=10,n_traits=3,plot_number=1,stopRate=0.8);
 TernPlot(O);
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }
