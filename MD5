@@ -1,6 +1,6 @@
-ce1321e17d8e1029a49a9d23c2337abf *DESCRIPTION
+a120daf6970d71d97f9178d6f5d2f2b8 *DESCRIPTION
 3a7132c2b358e8308065425992cd9dad *NAMESPACE
-abe92b0a60daa0b8d27b5bad7d7f4977 *R/ABC_SMC.R
+83064d4735680cdc2f8e1b11c147889d *R/ABC_SMC.R
 8525ff71dc6d2e12b1c4d51717715d24 *R/Preparation.R
 3840ccb1b7fb4fe78a483cec180d6ab9 *R/STEPCAM.R
 d4564a014055bf7d55aaff0572cb0e9a *R/generateArtificialData.R
@@ -8,7 +8,7 @@ d4564a014055bf7d55aaff0572cb0e9a *R/generateArtificialData.R
 2f846eefd7b2ddd6b02711c5bf43076f *R/modified_dbFD.R
 6b7953a50b9d88193f9593db6964a4bf *R/ternPlot.R
 ca95eabc1730c930519f7de32409ac18 *man/STEPCAM-internal.Rd
-25ac748518068d967f06ada9b81f0269 *man/STEPCAM-package.Rd
+494730ed125b01e17679ecece95eb928 *man/STEPCAM-package.Rd
 bede0c1f84364680fce9a612c221fd4d *man/STEPCAM_ABC.Rd
 8c1855a35ba851aa02c09f74e86d5fcb *man/TernPlot.Rd
 7368657a6db2a2bc3a34db58021d1ee3 *man/generate.Artificial.Data.Rd

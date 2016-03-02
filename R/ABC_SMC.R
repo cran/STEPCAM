@@ -191,9 +191,9 @@ sd_vals, summary_stats, community_number, species, abundances, frequencies, stop
       # calculate several measures of FD of modeled community
      # FD_output <- dbFD(traits[present_species, ], communities[, present_species], stand.x = F,messages=FALSE)
       FD_output <- strippedDbFd(Ord, communities[,present_species]);       
-      FRic <- FD_output$FRic[community_number] # FRic = functional richness (Villeger et al, 2008, Ecology)
-      FEve <- FD_output$FEve[community_number] # FEve = functional evenness (Villeger et al, 2008, Ecology)
-      FDiv <- FD_output$FDiv[community_number] # FDiv = functional diversity (Villeger et al, 2008, Ecology)
+      FRic <- FD_output$FRic # FRic = functional richness (Villeger et al, 2008, Ecology)
+      FEve <- FD_output$FEve # FEve = functional evenness (Villeger et al, 2008, Ecology)
+      FDiv <- FD_output$FDiv # FDiv = functional diversity (Villeger et al, 2008, Ecology)
         
       trait_means <- c()
       for(i in 1:n_traits){
