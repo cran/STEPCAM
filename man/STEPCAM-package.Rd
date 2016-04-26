@@ -8,6 +8,8 @@ ABC-SMC Inference of STEPCAM
 ABC-SMC inference of the relative contribution of dispersal assembly, filtering and limiting similarity through the use of stepwise commmunity assembly.
 \cr \cr
 Updates \cr
+Version 1.1.2 \cr
+	- updated the prior - now all three processes have a mean prior value of 1/3, and a log-normal kind shape in [0,1]
 Version 1.1.1 \cr
 	- fixed a bug in the ABC-SMC code leading to the error "Error in if (fit < threshold)  : missing value where TRUE/FALSE needed" \cr
 Version 1.1 \cr
@@ -19,8 +21,8 @@ Version 1.1 \cr
 \tabular{ll}{
 Package: \tab STEPCAM\cr
 Type: \tab Package\cr
-Version: \tab 1.1.1\cr
-Date: \tab 2016-03-02\cr
+Version: \tab 1.1.2\cr
+Date: \tab 2016-04-26\cr
 License: \tab GPL 2.0\cr
 }
  The function STEPCAM_ABC performs an ABC-SMC analysis of the STEPCAM model on user provided data,

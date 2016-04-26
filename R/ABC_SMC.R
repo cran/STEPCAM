@@ -1,12 +1,19 @@
 # function to generate a random combination of dispersal, filtering and competition parameter settings (uninformed prior assumed)
 getRandomVals <- function(max_val)
 {
-  disp <- round(runif(1, min = 0, max = max_val), 0);
-  filt <- round(runif(1, 0, max_val - disp), 0);
-  comp <- max_val - (filt + disp);
-  x <- c(disp, filt, comp);
-  return(x)
+  x <- runif(3, min = 0, max = 1);  
+  x <- x / sum(x); #normalize to 1
+  x <- x * max_val; #translate to integers
+  x2 <- floor(x); #round to integers
+  while(sum(x2) != max_val)
+  {
+  		a <- sample(1:3,size=1,prob=x-floor(x));
+  		x2[a] <- x2[a]+1;
+  }
+  
+  return(x2)
 }
+
 
 # function to randomly draw a particle depending on it's weight
 getFromPrevious <- function(inds, ws, disps, filts, comps)
