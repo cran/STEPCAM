@@ -1,11 +1,7 @@
-# Reduce the overload of the dbFD function
-# Separate into two functions: one to calculate the ordination axes. 
-# And the second function uses this axes to calculate FRic, FDiv, and FEve.
-# Calculate the ordination axes only once and reuse them during STEPCAM_ABC
 ordinationAxes <- function(x, corr = c("sqrt", "cailliez", "lingoes", "none"), 
                            ord = c("podani", "metric"), w, 
-                           asym.bin = NULL, messages = FALSE, stand.x = FALSE){
-  dist.bin <- NULL                        	
+                           asym.bin = NULL, messages = FALSE, stand.x = TRUE){
+  dist.bin <- 2
   tol <- .Machine$double.eps
   corr <- match.arg(corr)
   ord <- match.arg(ord)
@@ -48,11 +44,11 @@ ordinationAxes <- function(x, corr = c("sqrt", "cailliez", "lingoes", "none"),
           x.dist <- dist(x.s)
         }
         else {
-          x.dist <- gowdis(x, w = w, ord = ord, asym.bin = asym.bin)
+          x.dist <- FD::gowdis(x, w = w, ord = ord, asym.bin = asym.bin)
         }
       }
       else {
-        x.dist <- gowdis(x, w = w, ord = ord, asym.bin = asym.bin)
+        x.dist <- FD::gowdis(x, w = w, ord = ord, asym.bin = asym.bin)
       }
     }
     if (t.x == 1) {
@@ -100,7 +96,7 @@ ordinationAxes <- function(x, corr = c("sqrt", "cailliez", "lingoes", "none"),
           if (all(dist.bin != sequence[any(sequence)])) 
             stop("'dist.bin' must be an integer between 1 and 10.", 
                  "\n")
-          x.dist <- dist.binary(x.dummy.df, method = dist.bin)
+          x.dist <- ade4::dist.binary(x.dummy.df, method = dist.bin)
         }
       }
     }
@@ -109,7 +105,6 @@ ordinationAxes <- function(x, corr = c("sqrt", "cailliez", "lingoes", "none"),
     if (any(is.na(x))) {
       pos.NA <- which(is.na(x))
       x <- na.omit(x)
-      a <- a[, -pos.NA]
       x.rn <- x.rn[-pos.NA]
       if (messages) 
         cat("Warning: Species with missing trait values have been excluded.", 
@@ -126,14 +121,13 @@ ordinationAxes <- function(x, corr = c("sqrt", "cailliez", "lingoes", "none"),
     if (any(is.na(x))) {
       pos.NA <- which(is.na(x))
       x <- na.omit(x)
-      a <- a[, -pos.NA]
       x.rn <- x.rn[-pos.NA]
       if (messages) 
         cat("Warning: Species with missing trait values have been excluded.", 
             "\n")
     }
     else x <- x
-    dimnames(x) <- list(x.rn, "Trait")
+    #dimnames(x) <- list(x.rn, "Trait")
     x.dummy <- diag(nlevels(x))[x, ]
     x.dummy.df <- data.frame(x.dummy, row.names = x.rn)
     sequence <- 1:10
@@ -141,13 +135,12 @@ ordinationAxes <- function(x, corr = c("sqrt", "cailliez", "lingoes", "none"),
       stop("'dist.bin' must be an integer between 1 and 10.", 
            "\n")
     x <- data.frame(x)
-    x.dist <- dist.binary(x.dummy.df, method = dist.bin)
+    x.dist <- ade4::dist.binary(x.dummy.df, method = dist.bin)
   }
   if (is.ordered(x)) {
     if (any(is.na(x))) {
       pos.NA <- which(is.na(x))
       x <- na.omit(x)
-      a <- a[, -pos.NA]
       x.rn <- x.rn[-pos.NA]
       cat("Warning: Species with missing trait values have been excluded.", 
           "\n")
@@ -155,13 +148,12 @@ ordinationAxes <- function(x, corr = c("sqrt", "cailliez", "lingoes", "none"),
     else x <- x
     x <- data.frame(x)
     dimnames(x) <- list(x.rn, "Trait")
-    x.dist <- gowdis(x, w = w, ord = ord, asym.bin = asym.bin)
+    x.dist <- FD::gowdis(x, w = w, ord = ord, asym.bin = asym.bin)
   }
   if (is.factor(x) & !is.ordered(x)) {
     if (any(is.na(x))) {
       pos.NA <- which(is.na(x))
       x <- na.omit(x)
-      a <- a[, -pos.NA]
       x.rn <- x.rn[-pos.NA]
       if (messages) 
         cat("Warning: Species with missing trait values have been excluded.", 
@@ -174,7 +166,7 @@ ordinationAxes <- function(x, corr = c("sqrt", "cailliez", "lingoes", "none"),
     if (all(dist.bin != sequence[any(sequence)])) 
       stop("'dist.bin' must be an integer between 1 and 10.", 
            "\n")
-    x.dist <- dist.binary(x.dummy.df, method = dist.bin)
+    x.dist <- ade4::dist.binary(x.dummy.df, method = dist.bin)
     x <- data.frame(x)
     dimnames(x) <- list(x.rn, "Trait")
   }
@@ -192,9 +184,9 @@ ordinationAxes <- function(x, corr = c("sqrt", "cailliez", "lingoes", "none"),
       stop("At least one species has no trait data.", "\n")
   } 
   attr(x.dist, "Labels") <- x.rn
-  if (is.euclid(x.dist)) 
+  if (ade4::is.euclid(x.dist)) 
     x.dist2 <- x.dist
-  if (!is.euclid(x.dist)) {
+  if (!ade4::is.euclid(x.dist)) {
     if (corr == "lingoes") {
       x.dist2 <- lingoes(x.dist)
       if (messages) 
@@ -209,10 +201,10 @@ ordinationAxes <- function(x, corr = c("sqrt", "cailliez", "lingoes", "none"),
     }
     if (corr == "sqrt") {
       x.dist2 <- sqrt(x.dist)
-      if (!is.euclid(x.dist2)) 
+      if (!ade4::is.euclid(x.dist2)) 
         stop("Species x species distance matrix was still is not Euclidean after 'sqrt' correction. Use another correction method.", 
              "\n")
-      if (is.euclid(x.dist2)) 
+      if (ade4::is.euclid(x.dist2)) 
         if (messages) 
           cat("Species x species distance matrix was not Euclidean. 'sqrt' correction was applied.", 
               "\n")
@@ -224,14 +216,13 @@ ordinationAxes <- function(x, corr = c("sqrt", "cailliez", "lingoes", "none"),
             "\n")
     }
   }
-  x.pco <- dudi.pco(x.dist2, scannf = FALSE, full = TRUE)
+  x.pco <- ade4::dudi.pco(x.dist2, scannf = FALSE, full = TRUE)
   return(x.pco) # Best is to return the whole object, because dbFD needs sometimes more than the axes alone?!
 }
 
-
-# Strip away radically everything except FRic, FDiv, and FEve
-# Because this function needs to be much much faster!
-strippedDbFd <- function(x.pco, a, m = "max"){
+# Function to dermine the number of PCoA axes used and number of species. 
+# (Both constant in STEPCAM and therefor only camculated once.)
+detMnbsp <- function(x.pco, a){
   tol <- .Machine$double.eps
   a <- as.matrix(a)
   c <- nrow(a) # Number of communities
@@ -245,40 +236,56 @@ strippedDbFd <- function(x.pco, a, m = "max"){
     nb.sp[i] <- nrow(unique(traits.sp.pres))
   }
   min.nb.sp <- min(nb.sp)
-  m.max <- min.nb.sp - 1
-  Warning <- FALSE
+  m.max <- min.nb.sp - 1 # Minimum number of species in one of the communities - 1
+  #Warning <- FALSE
   if (min.nb.sp < 3) {
     nb.sp2 <- nb.sp[nb.sp > 2]
     m.max <- min(nb.sp2) - 1    
-  }
-  else {
+  } else {
     m.max <- m.max
   }
-  if(!is.numeric(m)){
-    m <- m.max
-  }
-  
+  m <- m.max
+  Res <- list()
+  Res[[1]] <- m
+  Res[[2]] <- nb.sp
+  return(Res)  
+}
+
+# Strip away radically everything except FRic, FDiv, and FEve
+# Because this function needs to be much much faster!
+# All communities are run in a for loop which cannot be vectorized
+strippedDbFd <- function(x.pco, a, m, nb.sp){
+  #tol <- .Machine$double.eps
+  a <- as.matrix(a)
+  c <- nrow(a) # Number of communities
+  traits <- x.pco$li 
+  Warning <- FALSE
   if (m < x.pco$nf){ # If there is a community with less species than ordination axes
     traits.FRic <- x.pco$li[, 1:m] # Use only the first m axes
   }
   if (m >= x.pco$nf){
     traits.FRic <- x.pco$li
   }
-  nbsp <- rep(NA, c)
-  names(nbsp) <- row.names(a)
-  FRic <- nbsp
-  FEve <- nbsp
-  FDiv <- nbsp
+  FRic <- rep(NA, c)
+  names(FRic) <- row.names(a)
+  FEve <- FRic
+  FDiv <- FRic
+  #AbundRel <- a/rowSums(a)
+  
   
   for (i in 1:c) { # For each community
     sppres <- which(a[i, ] > 0) # Present species
     S <- length(sppres)
-    nbsp[i] <- S
     tr <- data.frame(traits[sppres, ]) # Axes coordinates of the present species
     tr.FRic <- data.frame(traits.FRic[sppres, ])
     # Will I need relative abundances of the species?
     ab <- as.matrix(a[i, sppres])
     abundrel <- ab/sum(ab)
+    abund2 <- sapply( c(abundrel), function(x) x + abundrel)          
+    abund2vect <- as.dist(abund2)
+    
+    # New part: check range of axes values, because if range is very small, convhulln will fail
+    #apply(tr.FRic, 2, range)
     
     if (ncol(tr.FRic) > 1 & nb.sp[i] >= 3) { # If there are more than 3 species present
       if (Warning) 
@@ -286,7 +293,8 @@ strippedDbFd <- function(x.pco, a, m = "max"){
       if (!Warning) 
         thresh <- 3
       if (nb.sp[i] >= thresh) {
-        convhull <- convhulln(tr.FRic, "FA")
+        # Option QJ is helpfull in case of planar hulls, Pp removes warning
+        convhull <- geometry::convhulln(tr.FRic, c("QJ", "FA", "Pp")) 
         FRic[i] <- convhull$vol
       }
     }
@@ -298,34 +306,46 @@ strippedDbFd <- function(x.pco, a, m = "max"){
     
     if (nb.sp[i] >= 3) {
       tr.dist <- dist(tr) # pair-wise distance of ordination coordinates
-      linkmst <- mst(tr.dist)
+      linkmst <- ape::mst(tr.dist)
       mstvect <- as.dist(linkmst)
-      abund2 <- matrix(0, nrow = S, ncol = S)
-      for (q in 1:S) for (r in 1:S) abund2[q, r] <- abundrel[q] + abundrel[r]
-      abund2vect <- as.dist(abund2)
-      EW <- rep(0, S - 1)
-      flag <- 1
-      # Loops should be avoided
-      for (m in 1:((S - 1) * S/2)) {
-        if (mstvect[m] != 0) {
-          EW[flag] <- tr.dist[m]/(abund2vect[m])
-          flag <- flag + 1
-        }
-      }
+      #abund2 <- matrix(0, nrow = S, ncol = S)
+      #for (q in 1:S) for (r in 1:S) abund2[q, r] <- abundrel[q] + abundrel[r]
+      #  the *apply family is faster than the original code with more than three species
+      # Move this outside of the loop 'cause its always the same:
+      #abund2 <- sapply( c(abundrel), function(x) x + abundrel)          
+      #abund2vect <- as.dist(abund2)
+      #EW <- rep(0, S - 1)
+      #flag <- 1
+      #for (m in 1: ((S - 1) * S/2) ) {
+      #  if (mstvect[m] != 0) {
+      #    EW[flag] <- tr.dist[m]/(abund2vect[m])
+      #    flag <- flag + 1
+      #  }
+      #}
+      # Faster:
+      EW <- c((tr.dist * mstvect) / abund2vect)
+      EW <- EW[EW > 0]
+      
       minPEW <- rep(0, S - 1)
       OdSmO <- 1/(S - 1)
-      for (l in 1:(S - 1)) minPEW[l] <- min((EW[l]/sum(EW)), OdSmO)
+      for (l in 1:(S - 1)) minPEW[l] <- min( (EW[l]/sum(EW)), OdSmO)
+      # Slower:
+      #sapply( EW/sum(EW), function(x) min( x, OdSmO ))      
       FEve[i] <- ((sum(minPEW)) - OdSmO)/(1 - OdSmO)
     }
     if (ncol(tr.FRic) > 1 & nb.sp[i] >= 3) {
-      vert0 <- convhulln(tr.FRic, "Fx TO 'vert.txt'")
+      # Option QJ is helpfull in case of planar hulls, Pp removes warning
+      vert0 <- geometry::convhulln(tr.FRic, c("Fx TO 'vert.txt'", "QJ", "Pp"))
       vert1 <- scan("vert.txt", quiet = T)
       vert2 <- vert1 + 1
       vertices <- vert2[-1]
       trvertices <- tr.FRic[vertices, ]
-      baryv <- apply(trvertices, 2, mean)
-      distbaryv <- rep(0, S)
-      for (j in 1:S) distbaryv[j] <- (sum((tr.FRic[j, ] - baryv)^2))^0.5
+      baryv <- colMeans(trvertices) #apply(trvertices, 2, mean)
+      #Faster:
+      #distbaryv <- rep(0, S)
+      #for (j in 1:S) distbaryv[j] <- ( sum( (tr.FRic[j, ] - baryv)^2) )^0.5      
+      distbaryv <- sqrt( rowSums( (tr.FRic - baryv)^2) )
+      
       meandB <- mean(distbaryv)
       devdB <- distbaryv - meandB
       abdev2 <- abundrel * devdB
@@ -334,12 +354,8 @@ strippedDbFd <- function(x.pco, a, m = "max"){
     }    
   }
   res <- list()
-  res$nbsp <- nbsp
-  res$sing.sp <- nb.sp
   res$FRic <- FRic
   res$FEve <- FEve
   res$FDiv <- FDiv
   return(res)  
 }
-
-

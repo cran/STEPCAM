@@ -7,7 +7,10 @@
  ABC-SMC inference of the relative contribution of stochasticy (or random removal), filtering and limiting similarity (e.g. of shared resources (competition) or predators) through the use of stepwise commmunity assembly and fitting Functional Diversity patterns of simulated communities with those of observed communities. It takes quite a lot of computing time to run this function, so it is recommended to first run it for a very simple (species poor, artificial) dataset (see example).
 }
 \usage{
-STEPCAM_ABC(data_abundances,data_species,numParticles,n_traits,plot_number,stopRate)
+STEPCAM_ABC(data_abundances, data_species, numParticles, n_traits,
+                        plot_number, stopRate,
+                        stop_at_iteration,
+                        continue_from_file)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -32,6 +35,8 @@ STEPCAM_ABC(data_abundances,data_species,numParticles,n_traits,plot_number,stopR
 }
   \item{stopRate}{The SMC procedure stops as soon as the acceptance rate of newly proposed parameter combinations drops below this level. Beware that low values
                   for this parameter might lead into long computation times.}
+  \item{stop_at_iteration}{If the user instead wants to perform a fixed number of iterations, this parameter sets the maximum number of iterations (the SMC stops when either the maximum number of iterations is reached, or the acceptance rate drops below the stopRate, whatever happens first)}
+  \item{continue_from_file}{Should the ABC-SMC algorithm continue from previous output of the STEPCAM_ABC function?}
 }
 
 \value{
@@ -48,11 +53,14 @@ Thijs Janzen & Fons van der Plas + Torsten Hauffe
 
 
 \examples{
-Artificial.Data <- generate.Artificial.Data(numSpecies=40,numTraits=3,numCommunities=5,
-                   occurence_distribution=0.2,average_richness=0.5,SD_richness=0.2,
-                   random.Mechanism=FALSE);
-O <- STEPCAM_ABC(Artificial.Data$abundances,Artificial.Data$traits,
-                 numParticles=10,n_traits=3,plot_number=1,stopRate=0.8);
+\dontrun{ 
+Artificial.Data <- generate.Artificial.Data(n_species = 40, n_traits = 3,
+                        n_communities = 5, occurence_distribution = 0.2,
+                        average_richness = 0.5, sd_richness = 0.2,
+                        mechanism_random=FALSE)
+O <- STEPCAM_ABC(Artificial.Data$abundances, Artificial.Data$traits,
+                 numParticles = 10, n_traits = 3, plot_number = 1, stopRate = 0.8)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
